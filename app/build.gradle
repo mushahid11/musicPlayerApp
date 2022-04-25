@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.example.musicplayerapp"
         minSdk 21
-        targetSdk 32
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -42,7 +42,7 @@ dependencies {
     //Permissions
     implementation 'com.guolindev.permissionx:permissionx:1.6.2'
 
-    //Live data
+    //Live data plus viewModel
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation "androidx.activity:activity-ktx:1.4.0"
