@@ -12,8 +12,8 @@ import com.example.musicplayerapp.getTimeInMilles
 class SongRepository(private val application: Application) {
 
 
-    private val list: MutableList<AllSongsModel> = mutableListOf()
     fun loadAllSongs(activity: Activity) :List<AllSongsModel>{
+        val list = mutableListOf<AllSongsModel>()
 
         //Retrieve a list of Music files currently listed in the Media store DB via URI.
 

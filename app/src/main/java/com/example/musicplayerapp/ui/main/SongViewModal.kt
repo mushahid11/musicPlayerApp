@@ -2,6 +2,7 @@ package com.example.musicplayerapp.ui.main
 
 import android.app.Activity
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,10 +18,11 @@ class SongViewModal(application: Application) : AndroidViewModel(application) {
     private var list: List<AllSongsModel>? = null
     var audioList = MutableLiveData<List<AllSongsModel>>()
 
-    private fun Activity.getAudioList() {
+
+    fun getAudioList(activity: Activity) {
         viewModelScope.launch {
-            audioList.value = audioRepo.loadAllSongs(this@getAudioList)
-            list = audioList.value!!
+
+            audioList.value = audioRepo.loadAllSongs(activity)
         }
 
     }
