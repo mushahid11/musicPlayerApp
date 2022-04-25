@@ -12,7 +12,7 @@ import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
 
 class AllSongsAdapter(
-    val list: List<AllSongsModel>, val context: Context,
+    private val list: List<AllSongsModel>, val context: Context,
     private var onItemClicked: ((song: AllSongsModel) -> Unit)
 ) :
     RecyclerView.Adapter<AllSongsAdapter.ViewHolder>() {
@@ -46,16 +46,7 @@ class AllSongsAdapter(
 
 
         viewHolder.itemView.setOnClickListener {
-
             onItemClicked(list[position])
-
-            /*  val intent = Intent(context,Player::class.java)
-              intent.putExtra("path",dataSet[position].path)
-              intent.putExtra("name",dataSet[position].songName)
-              intent.putExtra("duration",dataSet[position].duration)
-              intent.putExtra("LIST", dataSet as Serializable?)
-              context.startActivity(intent)*/
-
         }
 
 

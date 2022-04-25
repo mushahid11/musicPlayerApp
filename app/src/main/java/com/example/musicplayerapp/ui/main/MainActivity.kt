@@ -1,7 +1,6 @@
 package com.example.musicplayerapp.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +24,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
 
-
         viewModal.getAudioList(this)
         viewModal.audioList.observe(this) { list ->
             list?.let {
@@ -37,10 +35,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setAdapter(list: List<AllSongsModel>) {
+    private fun setAdapter(list: List<AllSongsModel>) {
         noteRVAdapter = AllSongsAdapter(list,this@MainActivity) {
             Toast.makeText(this, "clicked"+it.songName, Toast.LENGTH_SHORT).show()
+             /* val intent = Intent(this,Player::class.java)
+              intent.putExtra("path",dataSet[position].path)
+              intent.putExtra("name",dataSet[position].songName)
+              intent.putExtra("duration",dataSet[position].duration)
+              intent.putExtra("LIST", dataSet as Serializable?)
+              context.startActivity(intent)*/
         }
-        binding.recyclerview.adapter=noteRVAdapter
+        binding.recyclerview.adapter = noteRVAdapter
     }
 }

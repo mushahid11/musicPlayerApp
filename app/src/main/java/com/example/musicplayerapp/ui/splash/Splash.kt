@@ -23,11 +23,10 @@ class Splash : AppCompatActivity() {
         binding.start.setOnClickListener {
             PermissionX.init(this)
                 .permissions(Manifest.permission.READ_EXTERNAL_STORAGE)
-                .request { allGranted, grantedList, deniedList ->
+                .request { allGranted, _, deniedList ->
                     if (allGranted) {
                         startActivity(Intent(this, MainActivity::class.java))
-                        Toast.makeText(this, "All permissions are granted", Toast.LENGTH_LONG)
-                            .show()
+
                     } else {
                         Toast.makeText(
                             this,
