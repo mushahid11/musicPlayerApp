@@ -8,8 +8,9 @@ import android.util.Log
 import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
 import com.example.musicplayerapp.getTimeInMilles
+import javax.inject.Inject
 
-class SongRepository(private val application: Application) {
+class SongRepository @Inject constructor(private val application: Application) {
 
 
     fun loadAllSongs(activity: Activity) :List<AllSongsModel>{

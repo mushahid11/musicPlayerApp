@@ -13,15 +13,11 @@ import kotlinx.coroutines.launch
 
 class SongViewModal(application: Application) : AndroidViewModel(application) {
 
-
     var audioRepo: SongRepository = SongRepository(application)
-    private var list: List<AllSongsModel>? = null
     var audioList = MutableLiveData<List<AllSongsModel>>()
-
 
     fun getAudioList(activity: Activity) {
         viewModelScope.launch {
-
             audioList.value = audioRepo.loadAllSongs(activity)
         }
 

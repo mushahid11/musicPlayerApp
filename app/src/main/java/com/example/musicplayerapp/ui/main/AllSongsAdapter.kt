@@ -12,8 +12,7 @@ import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
 
 class AllSongsAdapter(
-    private val list: List<AllSongsModel>, val context: Context,
-    private var onItemClicked: ((song: AllSongsModel) -> Unit)
+    private val list: List<AllSongsModel>, private var onItemClicked: (song: AllSongsModel) -> Unit
 ) :
     RecyclerView.Adapter<AllSongsAdapter.ViewHolder>() {
 

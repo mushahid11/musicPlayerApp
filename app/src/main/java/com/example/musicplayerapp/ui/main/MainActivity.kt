@@ -1,12 +1,16 @@
 package com.example.musicplayerapp.ui.main
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicplayerapp.MyService
 import com.example.musicplayerapp.data.constant.AllSongsModel
 import com.example.musicplayerapp.databinding.ActivityMainBinding
+import com.example.musicplayerapp.ui.Player
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,14 +40,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setAdapter(list: List<AllSongsModel>) {
-        noteRVAdapter = AllSongsAdapter(list,this@MainActivity) {
+        noteRVAdapter = AllSongsAdapter(list) {
             Toast.makeText(this, "clicked"+it.songName, Toast.LENGTH_SHORT).show()
-             /* val intent = Intent(this,Player::class.java)
-              intent.putExtra("path",dataSet[position].path)
-              intent.putExtra("name",dataSet[position].songName)
-              intent.putExtra("duration",dataSet[position].duration)
-              intent.putExtra("LIST", dataSet as Serializable?)
-              context.startActivity(intent)*/
+/*
+              val intent = Intent(this, Player::class.java)
+              intent.putExtra("path",it.path)
+              intent.putExtra("name",it.songName)
+              intent.putExtra("duration",it.duration)
+             // intent.putExtra("LIST", dataSet as Serializable?)
+              startActivity(intent)*/
+
+            //Start our own service
+            //Start our own service
+            val intent = Intent(
+                this,
+                MyService::class.java
+            )
+            intent.putExtra("path",it.path)
+            intent.putExtra("name",it.songName)
+            intent.putExtra("duration",it.duration)
+            //  intent.putExtra("LIST", songsList as Serializable?)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
+            }
+
+
         }
         binding.recyclerview.adapter = noteRVAdapter
     }

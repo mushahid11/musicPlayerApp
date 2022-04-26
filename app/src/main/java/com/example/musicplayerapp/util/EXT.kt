@@ -1,11 +1,6 @@
-package com.example.musicplayerapp
+package com.musmtec.musicplayer.util
 
-import android.content.Context
-import android.provider.MediaStore
 import android.util.Log
-import com.example.musicplayerapp.data.constant.AllSongsModel
-
-
 
 fun getTimeInMilles(time: Long): String {
     // Take Input in Long otherwise
