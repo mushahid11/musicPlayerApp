@@ -24,11 +24,6 @@ class MyService : Service() {
     var path: String? = null
 
 
-
-
-
-
-
     override fun onBind(p0: Intent?): IBinder? {
 
         return null
@@ -66,15 +61,12 @@ class MyService : Service() {
 
     private fun playMusic(path: String?, Duration: String?) {
 
-
-
         try {
             mediaPlayer?.apply {
                 setDataSource(path) //Write your location here
                 prepare()
                 start()
             }
-
 
             Log.d("playMusic", "playMusic: 2")
         } catch (e: Exception) {
@@ -116,5 +108,6 @@ class MyService : Service() {
         channel.description = "Hello! This is a notification."
         notificationManager.createNotificationChannel(channel)
     }
+
 
 }
