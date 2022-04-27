@@ -1,24 +1,25 @@
 package com.example.musicplayerapp.ui
 
 import android.content.Intent
-import android.media.MediaPlayer
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.example.musicplayerapp.MyService
+import android.widget.SeekBar
+import androidx.appcompat.app.AppCompatActivity
 import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
 import com.example.musicplayerapp.databinding.ActivityPlayerBinding
 import com.example.musicplayerapp.ui.main.MainActivity
+import com.example.musicplayerapp.util.getTimeInMilles
+import com.example.musicplayerapp.util.media.mediaPlayer
 import java.io.IOException
 
 class Player : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
 
-    private var mediaPlayer: MediaPlayer? = null
+
     private var currentSongIndex = 0
+
 
     private var songsList: List<AllSongsModel>? = null
 
@@ -31,7 +32,6 @@ class Player : AppCompatActivity() {
         setContentView(view)
 
 
-
         val path = intent.getStringExtra("path")
         val name = intent.getStringExtra("name")
         val Duration = intent.getStringExtra("duration")
@@ -39,34 +39,48 @@ class Player : AppCompatActivity() {
 
         binding.tvSongName.text = name
 
-
         binding.imgPlay.setOnClickListener {
 
+            if (mediaPlayer?.isPlaying == true) {
+                mediaPlayer?.pause()
 
-            //Start our own service
-            //Start our own service
-            val intent = Intent(
-                this@Player,
-                MyService::class.java
-            )
-            intent.putExtra("path", path)
-            intent.putExtra("name", name)
-            intent.putExtra("duration", Duration)
-            //  intent.putExtra("LIST", songsList as Serializable?)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                binding.imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+
+            } else {
+                mediaPlayer?.start()
+                binding.imgPlay.setImageResource(R.drawable.ic_baseline_pause_24)
+            }
+
+
+            /*  //Start our own service
+              //Start our own service
+              val intent = Intent(
+                  this@Player,
+                  MyService::class.java
+              )
+
+              intent.putExtra("path", path)
+              intent.putExtra("name", name)
+              intent.putExtra("duration", Duration)
+              intent.putExtra("LIST", songsList as Serializable?)
+
+
+              mediaPlayer = MediaPlayer()
+              *//*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
             } else {
                 startService(intent)
-            }
+            }*//*
 
-            /*if (mediaPlayer?.isPlaying == true) {
+
+            if (mediaPlayer?.isPlaying == true) {
                 mediaPlayer?.pause()
                 binding.imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
             } else {
                 binding.imgPlay.setImageResource(R.drawable.ic_baseline_pause_24)
                 mediaPlayer?.start()
-            }*/
-
+            }
+*/
         }
 
         binding.imgNext.setOnClickListener {
@@ -79,40 +93,40 @@ class Player : AppCompatActivity() {
 
 
         //    playMusic(path, Duration)
-        //    maxintializeSeekBar()
-        /* binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                 if (p2) mediaPlayer?.seekTo(p1)
-                 binding.tvDuration.text = getTimeInMilles(p1.toLong())
-             }
-
-             override fun onStartTrackingTouch(p0: SeekBar?) {
-                 // TODO("Not yet implemented")
-             }
-
-             override fun onStopTrackingTouch(p0: SeekBar?) {
-                 //  TODO("Not yet implemented")
-             }
-
-         })
- */
-
-
-    }
-
-    private fun playMusic(path: String?, Duration: String?) {
-
-
-        mediaPlayer = MediaPlayer()
-        try {
-            mediaPlayer?.setDataSource(path) //Write your location here
-            mediaPlayer?.prepare()
-            mediaPlayer?.start()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
         binding.tvTotalDuration.text = Duration
+        maxintializeSeekBar()
+        binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                if (p2) mediaPlayer?.seekTo(p1)
+                binding.tvDuration.text = getTimeInMilles(p1.toLong())
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+                // TODO("Not yet implemented")
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                //  TODO("Not yet implemented")
+            }
+
+        })
+
+
     }
+
+    /*  private fun playMusic(path: String?, Duration: String?) {
+
+
+          mediaPlayer = MediaPlayer()
+          try {
+              mediaPlayer?.setDataSource(path) //Write your location here
+              mediaPlayer?.prepare()
+              mediaPlayer?.start()
+          } catch (e: Exception) {
+              e.printStackTrace()
+          }
+          binding.tvTotalDuration.text = Duration
+      }*/
 
     private fun prev() {
         if (currentSongIndex > 0) {

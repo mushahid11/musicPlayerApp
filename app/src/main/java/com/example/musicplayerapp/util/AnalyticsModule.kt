@@ -16,16 +16,18 @@ object AnalyticsModule {
     fun Repositorypository(mediaPlayer: MediaPlayer): SongRepository {
         appRepository = SongRepository()
         return appRepository
-    }
-
-    private lateinit var proMediaPlayer: MediaPlayer
-    @Singleton
-    @Provides
-    fun ProvidesMediaPlayer(@ApplicationContext appContext: Context):MediaPlayer{
-        proMediaPlayer=MediaPlayer()
-        return proMediaPlayer
     }*/
 
+   /* @Singleton
+    @Provides
+    fun ProvidesMediaPlayer(@ApplicationContext appContext: Context):MediaPlayer{
+        return MediaPlayer()
+    }
 
+    @Singleton
+    @Provides
+    fun provideWifiManager(@ApplicationContext appContext: Context) : WifiManager {
+        return appContext.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+    }*/
 
 }

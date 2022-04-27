@@ -1,7 +1,6 @@
 package com.example.musicplayerapp.ui.main
 
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +46,8 @@ class AllSongsAdapter(
         viewHolder.itemView.setOnClickListener {
             onItemClicked(list[position])
         }
+
+
 
 
     }

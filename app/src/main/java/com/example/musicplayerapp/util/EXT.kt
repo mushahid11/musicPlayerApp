@@ -1,6 +1,8 @@
 package com.example.musicplayerapp.util
 
+import android.media.MediaPlayer
 import android.util.Log
+
 
 fun getTimeInMilles(time: Long): String {
     // Take Input in Long otherwise
@@ -34,3 +36,9 @@ fun getTimeInMilles(time: Long): String {
 
     return "$minutes:$seconds"
 }
+
+object media{
+    var mediaPlayer : MediaPlayer? = MediaPlayer();
+}
+
+
