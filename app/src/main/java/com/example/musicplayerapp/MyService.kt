@@ -1,19 +1,22 @@
 package com.example.musicplayerapp
 
 
-import android.R
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.musicplayerapp.data.constant.AllSongsModel
 import com.example.musicplayerapp.util.media.mediaPlayer
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MyService : Service() {
@@ -30,6 +33,7 @@ class MyService : Service() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         path = intent?.getStringExtra("path")
@@ -86,8 +90,9 @@ class MyService : Service() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showNotification() {
-        val notificationBuilder: NotificationCompat.Builder =
+      /*  val notificationBuilder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, "channelID")
                 .setSmallIcon(R.drawable.stat_notify_call_mute)
                 .setContentTitle("Notification")
@@ -96,7 +101,24 @@ class MyService : Service() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationId = 1
         createChannel(notificationManager)
-        notificationManager.notify(notificationId, notificationBuilder.build())
+        notificationManager.notify(notificationId, notificationBuilder.build())*/
+
+        val CHANNEL_ID = "my_app"
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "MyApp", NotificationManager.IMPORTANCE_DEFAULT
+        )
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+            channel
+        )
+        val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("Notification")
+            .setSmallIcon(R.drawable.backword)
+            .setContentText("Hello! This is a notification.")
+            .setAutoCancel(true)
+            .setContentText("").build()
+        startForeground(1, notification)
+
     }
 
     private fun createChannel(notificationManager: NotificationManager) {

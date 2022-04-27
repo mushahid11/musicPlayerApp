@@ -14,6 +14,7 @@ import com.example.musicplayerapp.util.getTimeInMilles
 import com.example.musicplayerapp.util.media.mediaPlayer
 import java.io.IOException
 
+
 class Player : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
@@ -39,6 +40,13 @@ class Player : AppCompatActivity() {
         songsList = intent.getSerializableExtra("LIST") as List<AllSongsModel>?
 
         Log.d("onCreate", "list size: ${songsList?.size}")
+
+
+        //Icon Change to pause when song finished
+        mediaPlayer?.setOnCompletionListener { // Do something when media player end playing
+          //  binding.imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            next()
+        }
 
         binding.tvSongName.text = name
 
@@ -190,10 +198,5 @@ class Player : AppCompatActivity() {
     }
 
 
-    override fun onPause() {
-        super.onPause()
-
-        mediaPlayer?.pause()
-    }
 
 }
