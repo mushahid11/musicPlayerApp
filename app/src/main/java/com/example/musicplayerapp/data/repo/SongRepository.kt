@@ -1,16 +1,14 @@
 package com.example.musicplayerapp.data.repo
 
 import android.app.Activity
-import android.app.Application
-import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
 import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
-import com.example.musicplayerapp.getTimeInMilles
+import com.example.musicplayerapp.util.getTimeInMilles
 import javax.inject.Inject
 
-class SongRepository @Inject constructor(private val application: Application) {
+class SongRepository @Inject constructor() {
 
 
     fun loadAllSongs(activity: Activity) :List<AllSongsModel>{

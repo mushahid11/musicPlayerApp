@@ -12,10 +12,8 @@ import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.core.net.toUri
 import com.example.musicplayerapp.data.constant.AllSongsModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyService : Service() {
@@ -25,7 +23,7 @@ class MyService : Service() {
     var Duration: String? = null
     var path: String? = null
 
-    @Inject
+
     lateinit var myPlayer: MediaPlayer
 
 
@@ -40,7 +38,7 @@ class MyService : Service() {
         path = intent?.getStringExtra("path")
         val name = intent?.getStringExtra("name")
         Duration = intent?.getStringExtra("duration")
-        //  songsList = intent?.getSerializableExtra("LIST") as List<AllSongsModel>?
+        //songsList = intent?.getSerializableExtra("LIST") as List<AllSongsModel>?
 
         Log.d("onBind:", "onBind: $path")
         Log.d("onBind:", "onBind: $name")
@@ -56,17 +54,17 @@ class MyService : Service() {
 
     override fun onCreate() {
 
-
      //   playMusic(path, Duration)
-
         Toast.makeText(this, "Service Successfully Created", Toast.LENGTH_LONG).show()
-        // myPlayer = MediaPlayer.create(this, R.raw.sisira)
+        //myPlayer = MediaPlayer.create(this, R.raw.sisira)
         //setting loop play to true
         //this will make the ringtone continuously playing        myPlayer.setLooping(false); // Set looping
     }
 
 
     private fun playMusic(path: String?, Duration: String?) {
+
+         myPlayer = MediaPlayer()
 
         try {
             myPlayer.setDataSource(path) //Write your location here
@@ -82,7 +80,6 @@ class MyService : Service() {
     override fun onStart(intent: Intent?, startid: Int) {
         Toast.makeText(this, "Service Started and Playing Music", Toast.LENGTH_LONG).show()
         // myPlayer.start()
-
     }
 
     override fun onDestroy() {

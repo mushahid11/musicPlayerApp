@@ -1,21 +1,31 @@
 package com.example.musicplayerapp.util
 
-import android.media.MediaPlayer
 import com.example.musicplayerapp.data.repo.SongRepository
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import javax.inject.Singleton
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(SingletonComponent::class)
 object AnalyticsModule {
 
+    private lateinit var appRepository: SongRepository
 
+  /*  @Singleton
+    @Provides
+    fun Repositorypository(mediaPlayer: MediaPlayer): SongRepository {
+        appRepository = SongRepository()
+        return appRepository
+    }
+
+    private lateinit var proMediaPlayer: MediaPlayer
     @Singleton
     @Provides
-    fun SongRepository(mediaPlayer: MediaPlayer): SongRepository = SongRepository(mediaPlayer)
+    fun ProvidesMediaPlayer(@ApplicationContext appContext: Context):MediaPlayer{
+        proMediaPlayer=MediaPlayer()
+        return proMediaPlayer
+    }*/
+
 
 
 }

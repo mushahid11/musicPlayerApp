@@ -4,9 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/USER/projects/musicPlayerApp/app/src/main/res/layout/activity_main.xml" value="0.14427083333333332" />
-        <entry key="..\:/Users/USER/projects/musicPlayerApp/app/src/main/res/layout/activity_player.xml" value="0.1921875" />
+        <entry key="..\:/Users/USER/projects/musicPlayerApp/app/src/main/res/layout/activity_player.xml" value="0.22" />
         <entry key="..\:/Users/USER/projects/musicPlayerApp/app/src/main/res/layout/activity_splash.xml" value="0.1421875" />
         <entry key="..\:/Users/USER/projects/musicPlayerApp/app/src/main/res/layout/songs_item.xml" value="0.1765625" />
+        <entry key="..\:/Users/USER/projects/musicPlayerApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.163" />
       </map>
     </option>
   </component>

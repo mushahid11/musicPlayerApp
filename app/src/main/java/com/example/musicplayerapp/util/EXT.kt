@@ -1,4 +1,4 @@
-package com.musmtec.musicplayer.util
+package com.example.musicplayerapp.util
 
 import android.util.Log
 

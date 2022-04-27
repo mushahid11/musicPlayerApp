@@ -1,6 +1,7 @@
 package com.example.musicplayerapp.ui.main
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -10,10 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayerapp.MyService
 import com.example.musicplayerapp.data.constant.AllSongsModel
 import com.example.musicplayerapp.databinding.ActivityMainBinding
-import com.example.musicplayerapp.ui.Player
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
+    @Inject
+    lateinit var myPlayer: MediaPlayer
     //on below line we are creating a variable for our recycler view, exit text, button and viewmodal.
     private val viewModal: SongViewModal by viewModels()
     private lateinit var noteRVAdapter: AllSongsAdapter
@@ -41,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAdapter(list: List<AllSongsModel>) {
         noteRVAdapter = AllSongsAdapter(list) {
-            Toast.makeText(this, "clicked"+it.songName, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "clicked" + it.songName, Toast.LENGTH_SHORT).show()
 /*
               val intent = Intent(this, Player::class.java)
               intent.putExtra("path",it.path)
@@ -56,9 +61,9 @@ class MainActivity : AppCompatActivity() {
                 this,
                 MyService::class.java
             )
-            intent.putExtra("path",it.path)
-            intent.putExtra("name",it.songName)
-            intent.putExtra("duration",it.duration)
+            intent.putExtra("path", it.path)
+            intent.putExtra("name", it.songName)
+            intent.putExtra("duration", it.duration)
             //  intent.putExtra("LIST", songsList as Serializable?)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
