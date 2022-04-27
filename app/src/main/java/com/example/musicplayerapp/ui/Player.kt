@@ -3,6 +3,7 @@ package com.example.musicplayerapp.ui
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.musicplayerapp.R
@@ -37,6 +38,8 @@ class Player : AppCompatActivity() {
         val Duration = intent.getStringExtra("duration")
         songsList = intent.getSerializableExtra("LIST") as List<AllSongsModel>?
 
+        Log.d("onCreate", "list size: ${songsList?.size}")
+
         binding.tvSongName.text = name
 
         binding.imgPlay.setOnClickListener {
@@ -52,35 +55,6 @@ class Player : AppCompatActivity() {
             }
 
 
-            /*  //Start our own service
-              //Start our own service
-              val intent = Intent(
-                  this@Player,
-                  MyService::class.java
-              )
-
-              intent.putExtra("path", path)
-              intent.putExtra("name", name)
-              intent.putExtra("duration", Duration)
-              intent.putExtra("LIST", songsList as Serializable?)
-
-
-              mediaPlayer = MediaPlayer()
-              *//*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent)
-            } else {
-                startService(intent)
-            }*//*
-
-
-            if (mediaPlayer?.isPlaying == true) {
-                mediaPlayer?.pause()
-                binding.imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-            } else {
-                binding.imgPlay.setImageResource(R.drawable.ic_baseline_pause_24)
-                mediaPlayer?.start()
-            }
-*/
         }
 
         binding.imgNext.setOnClickListener {
@@ -114,19 +88,32 @@ class Player : AppCompatActivity() {
 
     }
 
-    /*  private fun playMusic(path: String?, Duration: String?) {
+     /* private fun playMusic(path: String?, Duration: String?) {
 
 
-          mediaPlayer = MediaPlayer()
-          try {
-              mediaPlayer?.setDataSource(path) //Write your location here
-              mediaPlayer?.prepare()
-              mediaPlayer?.start()
-          } catch (e: Exception) {
-              e.printStackTrace()
+          mediaPlayer?.apply {
+              try {
+                  setDataSource(path) //Write your location here
+                  prepare()
+                  start()
+              } catch (e: Exception) {
+                  e.printStackTrace()
+              }
+              binding.tvTotalDuration.text = Duration
           }
-          binding.tvTotalDuration.text = Duration
+
       }*/
+
+    private fun next() {
+        if (currentSongIndex < (songsList!!.size - 1)) {
+            playSong(currentSongIndex + 1);
+            currentSongIndex += 1;
+        } else {
+            // play first song
+            playSong(0);
+            currentSongIndex = 0;
+        }
+    }
 
     private fun prev() {
         if (currentSongIndex > 0) {
@@ -139,16 +126,7 @@ class Player : AppCompatActivity() {
         }
     }
 
-    private fun next() {
-        if (currentSongIndex < (songsList!!.size - 1)) {
-            playSong(currentSongIndex + 1);
-            currentSongIndex += 1;
-        } else {
-            // play first song
-            playSong(0);
-            currentSongIndex = 0;
-        }
-    }
+
 
     private fun maxintializeSeekBar() {
 
