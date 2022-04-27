@@ -6,13 +6,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.musicplayerapp.data.constant.AllSongsModel
+import com.example.musicplayerapp.util.media.mediaPlayer
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +24,9 @@ class MyService : Service() {
     var path: String? = null
 
 
-    lateinit var myPlayer: MediaPlayer
+
+
+
 
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -64,12 +66,16 @@ class MyService : Service() {
 
     private fun playMusic(path: String?, Duration: String?) {
 
-         myPlayer = MediaPlayer()
+
 
         try {
-            myPlayer.setDataSource(path) //Write your location here
-            myPlayer.prepare()
-            myPlayer.start()
+            mediaPlayer?.apply {
+                setDataSource(path) //Write your location here
+                prepare()
+                start()
+            }
+
+
             Log.d("playMusic", "playMusic: 2")
         } catch (e: Exception) {
             e.printStackTrace()
