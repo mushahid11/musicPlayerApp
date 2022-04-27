@@ -85,6 +85,7 @@ class Player : AppCompatActivity() {
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
                 // TODO("Not yet implemented")
+                Log.d("onStartTrackingTouch", "onStartTrackingTouch: ")
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
