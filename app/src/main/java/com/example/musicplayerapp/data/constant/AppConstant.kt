@@ -18,6 +18,9 @@ object AppConstant {
     const val ANIMATION_DURATION_MILLIS: Long = 1000
     const val ANIMATION_START_DELAY_MILLIS: Long = 500
     const val PageNumber = "PageNumber"
-    const val DocPath = "DocPath"
+    const val PAUSE = "Pause"
+    const val PLAY = "play"
+    const val PREVIOUS = "previous"
+    const val NEXT = "next"
 
 }

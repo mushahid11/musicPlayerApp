@@ -37,6 +37,8 @@
         </activity>
 
         <service android:name=".MyService" />
+
+        <receiver android:name=".MyService$Receiver"/>
     </application>
 
 </manifest>

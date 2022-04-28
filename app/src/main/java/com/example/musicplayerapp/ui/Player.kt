@@ -41,7 +41,6 @@ class Player : AppCompatActivity() {
 
         Log.d("onCreate", "list size: ${songsList?.size}")
 
-
         //Icon Change to pause when song finished
         mediaPlayer?.setOnCompletionListener { // Do something when media player end playing
           //  binding.imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
