@@ -197,8 +197,8 @@ class MyService : Service() {
             when (intent.action) {
                 PAUSE -> {
                     Log.d("TAG4", "onReceivePAUSE: ")
-                  // mediaPlayer?.pause()
-                    prev()
+                  mediaPlayer?.pause()
+                   // prev()
                     /*  MyService().sharedViewModel.optionItemClick?.invoke(12)
                       MyService().sharedViewModel.optionItemClick3?.invoke(15)
                       MyService().listner.stopButton()*/
@@ -206,8 +206,8 @@ class MyService : Service() {
                 }
 
                 PLAY -> {
-                  //  mediaPlayer?.start()
-                    next()
+                    mediaPlayer?.start()
+                    //next()
 
                     /* Log.d("TAG4", "onReceiveSTART: ")
                      MyMusicService().sharedViewModel.mediaPlayer.start()
@@ -241,8 +241,7 @@ class MyService : Service() {
 
 
         fun next() {
-
-            Log.d("next", "next: ")
+            Log.d("next", "next: ${MyService().songsList!!.size - 1}")
             if (currentSongIndex < (MyService().songsList!!.size - 1)) {
                 playSong(currentSongIndex + 1);
                 currentSongIndex += 1;
