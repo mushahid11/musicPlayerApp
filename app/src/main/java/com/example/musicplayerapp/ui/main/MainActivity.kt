@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("path", it.path)
             intent.putExtra("name", it.songName)
             intent.putExtra("duration", it.duration)
-            //   intent.putExtra("LIST", list as Serializable?)
+            intent.putExtra("LIST", list as Serializable?)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
             } else {

@@ -50,6 +50,7 @@ class MyService : Service() {
         Log.d("onBind:", "onBind: $path")
         Log.d("onBind:", "onBind: $name")
         Log.d("onBind:", "onBind: $Duration")
+        Log.d("onBind:", "onBind: ${songsList?.size}")
 
 
         val notificationIntent = Intent(this, Player::class.java)
@@ -196,7 +197,8 @@ class MyService : Service() {
             when (intent.action) {
                 PAUSE -> {
                     Log.d("TAG4", "onReceivePAUSE: ")
-                    mediaPlayer?.pause()
+                  // mediaPlayer?.pause()
+                    prev()
                     /*  MyService().sharedViewModel.optionItemClick?.invoke(12)
                       MyService().sharedViewModel.optionItemClick3?.invoke(15)
                       MyService().listner.stopButton()*/
@@ -204,7 +206,8 @@ class MyService : Service() {
                 }
 
                 PLAY -> {
-                    mediaPlayer?.start()
+                  //  mediaPlayer?.start()
+                    next()
 
                     /* Log.d("TAG4", "onReceiveSTART: ")
                      MyMusicService().sharedViewModel.mediaPlayer.start()
@@ -238,6 +241,8 @@ class MyService : Service() {
 
 
         fun next() {
+
+            Log.d("next", "next: ")
             if (currentSongIndex < (MyService().songsList!!.size - 1)) {
                 playSong(currentSongIndex + 1);
                 currentSongIndex += 1;
