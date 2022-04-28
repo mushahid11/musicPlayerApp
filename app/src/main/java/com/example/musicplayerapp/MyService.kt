@@ -18,7 +18,6 @@ import com.example.musicplayerapp.data.constant.AppConstant.NEXT
 import com.example.musicplayerapp.data.constant.AppConstant.PAUSE
 import com.example.musicplayerapp.data.constant.AppConstant.PLAY
 import com.example.musicplayerapp.data.constant.AppConstant.PREVIOUS
-import com.example.musicplayerapp.ui.Player
 import com.example.musicplayerapp.util.media.mediaPlayer
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -27,7 +26,9 @@ import java.io.IOException
 @AndroidEntryPoint
 class MyService : Service() {
 
-    var songsList: List<AllSongsModel>? = null
+     companion object {
+         var songsList: List<AllSongsModel>? = null
+     }
 
     var Duration: String? = null
     var path: String? = null
@@ -53,9 +54,6 @@ class MyService : Service() {
         Log.d("onBind:", "onBind: ${songsList?.size}")
 
 
-        val notificationIntent = Intent(this, Player::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 2, notificationIntent, FLAG_IMMUTABLE)
-
         val pauseIntent = Intent(baseContext, Receiver::class.java).setAction(PAUSE)
         val pausePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
@@ -64,7 +62,6 @@ class MyService : Service() {
             )
         } else {
             PendingIntent.getBroadcast(baseContext, 0, pauseIntent, FLAG_UPDATE_CURRENT)
-
         }
 
         val playIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
@@ -108,9 +105,7 @@ class MyService : Service() {
             CHANNEL_ID,
             "MyApp", NotificationManager.IMPORTANCE_DEFAULT
         )
-        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
-            channel
-        )
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Notification")
             .setSmallIcon(R.drawable.backword)
@@ -198,79 +193,60 @@ class MyService : Service() {
                 PAUSE -> {
                     Log.d("TAG4", "onReceivePAUSE: ")
                   mediaPlayer?.pause()
-                   // prev()
-                    /*  MyService().sharedViewModel.optionItemClick?.invoke(12)
-                      MyService().sharedViewModel.optionItemClick3?.invoke(15)
-                      MyService().listner.stopButton()*/
-                    //MyMusicService().sharedViewModel.updateEqStop?.invoke(14)
+
                 }
 
                 PLAY -> {
-                    mediaPlayer?.start()
-                    //next()
+                 mediaPlayer?.start()
 
-                    /* Log.d("TAG4", "onReceiveSTART: ")
-                     MyMusicService().sharedViewModel.mediaPlayer.start()
-                     //MyMusicService().sharedViewModel.ncPlayPause()
-                     MyMusicService().sharedViewModel.optionItemClick2?.invoke(13)
-                     MyMusicService().sharedViewModel.optionItemClick3?.invoke(16)
-                     MyMusicService().listner.startButton()*/
                 }
 
                 PREVIOUS -> {
-                    Log.d("TAG4", "onReceivePAUSE: ")
                     prev()
-                    /*  MyService().sharedViewModel.optionItemClick?.invoke(12)
-                      MyService().sharedViewModel.optionItemClick3?.invoke(15)
-                      MyService().listner.stopButton()*/
-                    //MyMusicService().sharedViewModel.updateEqStop?.invoke(14)
+
                 }
 
                 NEXT -> {
                     next()
-
-                    /* Log.d("TAG4", "onReceiveSTART: ")
-                     MyMusicService().sharedViewModel.mediaPlayer.start()
-                     //MyMusicService().sharedViewModel.ncPlayPause()
-                     MyMusicService().sharedViewModel.optionItemClick2?.invoke(13)
-                     MyMusicService().sharedViewModel.optionItemClick3?.invoke(16)
-                     MyMusicService().listner.startButton()*/
                 }
             }
         }
 
 
         fun next() {
-            Log.d("next", "next: ${MyService().songsList!!.size - 1}")
-            if (currentSongIndex < (MyService().songsList!!.size - 1)) {
-                playSong(currentSongIndex + 1);
-                currentSongIndex += 1;
-            } else {
-                // play first song
-                playSong(0);
-                currentSongIndex = 0;
-            }
+
+             if (currentSongIndex < (songsList!!.size - 1)) {
+                 playSong(currentSongIndex + 1);
+                 currentSongIndex += 1;
+             } else {
+                 // play first song
+                 playSong(0);
+                 currentSongIndex = 0;
+             }
+
         }
 
         fun prev() {
-            if (currentSongIndex > 0) {
-                playSong(currentSongIndex - 1);
-                currentSongIndex -= 1;
-            } else {
-                // play last song
-                playSong(MyService().songsList!!.size - 1);
-                currentSongIndex = MyService().songsList!!.size - 1;
-            }
+
+             if (currentSongIndex > 0) {
+                 playSong(currentSongIndex - 1);
+                 currentSongIndex -= 1;
+             } else {
+                 // play last song
+                 playSong(songsList!!.size - 1);
+                 currentSongIndex =songsList!!.size - 1;
+             }
+
         }
 
         private fun playSong(songIndex: Int) {
 
-            ///     binding.tvSongName.text = songsList?.get(songIndex)?.songName
+            ///binding.tvSongName.text = songsList?.get(songIndex)?.songName
 
-            // Play song
+            //Play song
             try {
                 mediaPlayer?.reset()
-                mediaPlayer?.setDataSource(MyService().songsList?.get(songIndex)?.path)
+                mediaPlayer?.setDataSource(songsList?.get(songIndex)?.path)
                 mediaPlayer?.prepare()
                 mediaPlayer?.start()
 
@@ -291,6 +267,8 @@ class MyService : Service() {
 
                  // Updating progress bar
                  updateProgressBar()*/
+
+
             } catch (e: IllegalArgumentException) {
                 e.printStackTrace()
             } catch (e: IllegalStateException) {
