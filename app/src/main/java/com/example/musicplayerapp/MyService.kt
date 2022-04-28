@@ -250,6 +250,8 @@ class MyService : Service() {
                 mediaPlayer?.prepare()
                 mediaPlayer?.start()
 
+                Log.d("playSong", "playSong: ")
+
                 //  maxintializeSeekBar()
 
                 //           binding.tvTotalDuration.text = songsList?.get(songIndex)?.duration
