@@ -55,27 +55,18 @@ class MyService : Service() {
 
 
 
-       /* val pauseIntent = Intent(baseContext, Receiver::class.java).setAction(PAUSE)
-        val pausePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(
-                baseContext, 0, pauseIntent,
-                FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(baseContext, 0, pauseIntent, FLAG_UPDATE_CURRENT)
-        }*/
-
-        val PrevIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
-        val PrevPendingIntentt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val prevIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
+        val prevPendingIntentt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
                 baseContext,
                 0,
-                PrevIntent,
+                prevIntent,
                 FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
             )
         } else {
-            PendingIntent.getBroadcast(baseContext, 0, PrevIntent, FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(baseContext, 0, prevIntent, FLAG_UPDATE_CURRENT)
         }
+
 
         val playIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
         val playPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -91,16 +82,16 @@ class MyService : Service() {
 
 
 
-        val NextIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
-        val NextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val nextIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
+        val nextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
                 baseContext,
                 0,
-                NextIntent,
+                nextIntent,
                 FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
             )
         } else {
-            PendingIntent.getBroadcast(baseContext, 0, NextIntent, FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(baseContext, 0, nextIntent, FLAG_UPDATE_CURRENT)
         }
 
         val CHANNEL_ID = "my_app"
@@ -110,13 +101,12 @@ class MyService : Service() {
         )
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Notification")
-            .setSmallIcon(R.drawable.backword)
+            .setContentTitle(name)
+            .setSmallIcon(R.drawable.music_notes)
             .setContentText("Hello! This is a notification.")
-           // .addAction(R.drawable.ic_baseline_play_arrow_24, "pause", pausePendingIntent)
-            .addAction(R.drawable.backword, "previous", PrevPendingIntentt)
+            .addAction(R.drawable.backword, "previous", prevPendingIntentt)
             .addAction(R.drawable.ic_baseline_play_arrow_24, "play", playPendingIntent)
-            .addAction(R.drawable.ic_baseline_fast_forward_24, "Next", NextPendingIntent)
+            .addAction(R.drawable.ic_baseline_fast_forward_24, "Next", nextPendingIntent)
             .setAutoCancel(true)
             .setContentText("").build()
         startForeground(1, notification)
@@ -175,7 +165,6 @@ class MyService : Service() {
                     }else{
                         mediaPlayer?.start()
                     }
-
 
                 }
 
