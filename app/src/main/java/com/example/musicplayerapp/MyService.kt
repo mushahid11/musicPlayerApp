@@ -39,6 +39,11 @@ class MyService : Service() {
         return null
     }
 
+    override fun onStart(intent: Intent?, startid: Int) {
+        Toast.makeText(this, "Service Started and Playing Music", Toast.LENGTH_LONG).show()
+        // myPlayer.start()
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -48,13 +53,9 @@ class MyService : Service() {
         Duration = intent?.getStringExtra("duration")
         songsList = intent?.getSerializableExtra("LIST") as List<AllSongsModel>?
 
-        Log.d("onBind:", "onBind: $path")
-        Log.d("onBind:", "onBind: $name")
-        Log.d("onBind:", "onBind: $Duration")
-        Log.d("onBind:", "onBind: ${songsList?.size}")
 
 
-        val pauseIntent = Intent(baseContext, Receiver::class.java).setAction(PAUSE)
+       /* val pauseIntent = Intent(baseContext, Receiver::class.java).setAction(PAUSE)
         val pausePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
                 baseContext, 0, pauseIntent,
@@ -62,6 +63,18 @@ class MyService : Service() {
             )
         } else {
             PendingIntent.getBroadcast(baseContext, 0, pauseIntent, FLAG_UPDATE_CURRENT)
+        }*/
+
+        val PrevIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
+        val PrevPendingIntentt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getBroadcast(
+                baseContext,
+                0,
+                PrevIntent,
+                FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getBroadcast(baseContext, 0, PrevIntent, FLAG_UPDATE_CURRENT)
         }
 
         val playIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
@@ -76,17 +89,7 @@ class MyService : Service() {
             PendingIntent.getBroadcast(baseContext, 0, playIntent, FLAG_UPDATE_CURRENT)
         }
 
-        val PrevIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
-        val PrevPendingIntentt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getBroadcast(
-                baseContext,
-                0,
-                PrevIntent,
-                FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
-            )
-        } else {
-            PendingIntent.getBroadcast(baseContext, 0, playIntent, FLAG_UPDATE_CURRENT)
-        }
+
 
         val NextIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
         val NextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -97,7 +100,7 @@ class MyService : Service() {
                 FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
             )
         } else {
-            PendingIntent.getBroadcast(baseContext, 0, playIntent, FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(baseContext, 0, NextIntent, FLAG_UPDATE_CURRENT)
         }
 
         val CHANNEL_ID = "my_app"
@@ -110,10 +113,10 @@ class MyService : Service() {
             .setContentTitle("Notification")
             .setSmallIcon(R.drawable.backword)
             .setContentText("Hello! This is a notification.")
-            .addAction(R.drawable.ic_baseline_play_arrow_24, "pause", pausePendingIntent)
-            .addAction(R.drawable.ic_baseline_pause_24, "play", playPendingIntent)
-            .addAction(R.drawable.ic_baseline_fast_forward_24, "play", NextPendingIntent)
-            .addAction(R.drawable.backword, "play", PrevPendingIntentt)
+           // .addAction(R.drawable.ic_baseline_play_arrow_24, "pause", pausePendingIntent)
+            .addAction(R.drawable.backword, "previous", PrevPendingIntentt)
+            .addAction(R.drawable.ic_baseline_play_arrow_24, "play", playPendingIntent)
+            .addAction(R.drawable.ic_baseline_fast_forward_24, "Next", NextPendingIntent)
             .setAutoCancel(true)
             .setContentText("").build()
         startForeground(1, notification)
@@ -152,37 +155,6 @@ class MyService : Service() {
 
     }
 
-    override fun onStart(intent: Intent?, startid: Int) {
-        Toast.makeText(this, "Service Started and Playing Music", Toast.LENGTH_LONG).show()
-        // myPlayer.start()
-    }
-
-    override fun onDestroy() {
-        Toast.makeText(this, "Service Stopped and Music Stopped", Toast.LENGTH_LONG).show()
-        // myPlayer.stop()
-    }
-
-
-    /*@RequiresApi(Build.VERSION_CODES.O)
-    private fun showNotification(pausePendingIntent: PendingIntent?,playPendingIntent: PendingIntent?) {
-        val CHANNEL_ID = "my_app"
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            "MyApp", NotificationManager.IMPORTANCE_DEFAULT
-        )
-        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
-            channel
-        )
-        val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Notification")
-            .setSmallIcon(R.drawable.backword)
-            .setContentText("Hello! This is a notification.")
-            .addAction(R.drawable.ic_baseline_play_arrow_24, "pause", pausePendingIntent)
-            .addAction(R.drawable.ic_baseline_pause_24, "play", playPendingIntent)
-            .setAutoCancel(true)
-            .setContentText("").build()
-        startForeground(1, notification)
-    }*/
 
 
     class Receiver : BroadcastReceiver() {
@@ -197,13 +169,18 @@ class MyService : Service() {
                 }
 
                 PLAY -> {
-                 mediaPlayer?.start()
+
+                    if(mediaPlayer?.isPlaying == true){
+                        mediaPlayer?.pause()
+                    }else{
+                        mediaPlayer?.start()
+                    }
+
 
                 }
 
                 PREVIOUS -> {
                     prev()
-
                 }
 
                 NEXT -> {
@@ -250,25 +227,6 @@ class MyService : Service() {
                 mediaPlayer?.prepare()
                 mediaPlayer?.start()
 
-                Log.d("playSong", "playSong: ")
-
-                //  maxintializeSeekBar()
-
-                //           binding.tvTotalDuration.text = songsList?.get(songIndex)?.duration
-
-                // Displaying Song title
-                //     val songTitle: String = songsList.get(songIndex).get("songTitle")
-                // songTitleLabel.setText(songTitle)
-
-                // Changing Button Image to pause image
-                //           binding.imgPlay.setImageResource(R.drawable.ic_baseline_pause_24)
-
-                /* // set Progress bar values
-                 songProgressBar.setProgress(0)
-                 songProgressBar.setMax(100)
-
-                 // Updating progress bar
-                 updateProgressBar()*/
 
 
             } catch (e: IllegalArgumentException) {
@@ -280,6 +238,12 @@ class MyService : Service() {
             }
         }
 
+    }
+
+
+    override fun onDestroy() {
+        Toast.makeText(this, "Service Stopped and Music Stopped", Toast.LENGTH_LONG).show()
+        // myPlayer.stop()
     }
 
 }
