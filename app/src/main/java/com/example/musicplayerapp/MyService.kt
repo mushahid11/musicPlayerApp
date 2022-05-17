@@ -30,7 +30,7 @@ class MyService : Service() {
          var songsList: List<AllSongsModel>? = null
      }
 
-    var Duration: String? = null
+    private var Duration: String? = null
     var path: String? = null
 
 
@@ -53,7 +53,16 @@ class MyService : Service() {
         Duration = intent?.getStringExtra("duration")
         songsList = intent?.getSerializableExtra("LIST") as List<AllSongsModel>?
 
+        showNotification(name)
 
+
+
+        playMusic(path, Duration)
+
+        return START_NOT_STICKY
+    }
+
+    private fun showNotification(name: String?) {
 
         val prevIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
         val prevPendingIntentt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -80,8 +89,6 @@ class MyService : Service() {
             PendingIntent.getBroadcast(baseContext, 0, playIntent, FLAG_UPDATE_CURRENT)
         }
 
-
-
         val nextIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
         val nextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
@@ -95,36 +102,34 @@ class MyService : Service() {
         }
 
         val CHANNEL_ID = "my_app"
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            "MyApp", NotificationManager.IMPORTANCE_DEFAULT
+        val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel(
+                CHANNEL_ID,
+                "MyApp", NotificationManager.IMPORTANCE_DEFAULT
+            )
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+            channel
         )
-        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(name)
             .setSmallIcon(R.drawable.music_notes)
             .setContentText("Hello! This is a notification.")
-            .addAction(R.drawable.backword, "previous", prevPendingIntentt)
+            .addAction(R.drawable.ic_baseline_fast_rewind_24, "previous", prevPendingIntentt)
             .addAction(R.drawable.ic_baseline_play_arrow_24, "play", playPendingIntent)
             .addAction(R.drawable.ic_baseline_fast_forward_24, "Next", nextPendingIntent)
             .setAutoCancel(true)
             .setContentText("").build()
         startForeground(1, notification)
-
-        //  showNotification(playIntent,pauseIntent)
-
-        playMusic(path, Duration)
-
-        return START_NOT_STICKY
     }
 
 
     override fun onCreate() {
         //   playMusic(path, Duration)
         Toast.makeText(this, "Service Successfully Created", Toast.LENGTH_LONG).show()
-        //myPlayer = MediaPlayer.create(this, R.raw.sisira)
-        //setting loop play to true
-        //this will make the ringtone continuously playing        myPlayer.setLooping(false); // Set looping
+
     }
 
 
@@ -137,10 +142,8 @@ class MyService : Service() {
                 start()
             }
 
-            Log.d("playMusic", "playMusic: 2")
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d("playMusic", "playMusic: $e")
         }
 
     }
@@ -153,13 +156,10 @@ class MyService : Service() {
 
             when (intent.action) {
                 PAUSE -> {
-                    Log.d("TAG4", "onReceivePAUSE: ")
                   mediaPlayer?.pause()
-
                 }
 
                 PLAY -> {
-
                     if(mediaPlayer?.isPlaying == true){
                         mediaPlayer?.pause()
                     }else{
@@ -206,18 +206,15 @@ class MyService : Service() {
         }
 
         private fun playSong(songIndex: Int) {
-
-            ///binding.tvSongName.text = songsList?.get(songIndex)?.songName
-
             //Play song
             try {
-                mediaPlayer?.reset()
-                mediaPlayer?.setDataSource(songsList?.get(songIndex)?.path)
-                mediaPlayer?.prepare()
-                mediaPlayer?.start()
-
-
-
+                mediaPlayer?.apply {
+                   reset()
+                   setDataSource(songsList?.get(songIndex)?.path)
+                   prepare()
+                   start()
+                }
+                
             } catch (e: IllegalArgumentException) {
                 e.printStackTrace()
             } catch (e: IllegalStateException) {
@@ -232,7 +229,6 @@ class MyService : Service() {
 
     override fun onDestroy() {
         Toast.makeText(this, "Service Stopped and Music Stopped", Toast.LENGTH_LONG).show()
-        // myPlayer.stop()
     }
 
 }

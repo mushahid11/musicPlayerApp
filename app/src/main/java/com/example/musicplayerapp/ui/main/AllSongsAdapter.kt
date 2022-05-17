@@ -37,17 +37,17 @@ class AllSongsAdapter(
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
+        viewHolder.apply {
+            imgSong.setImageResource(list[position].image)
+            tvSongName.text = list[position].songName
+            tvDuration.text = list[position].duration
+        }
 
-        viewHolder.imgSong.setImageResource(list[position].image)
-        viewHolder.tvSongName.text = list[position].songName
-        viewHolder.tvDuration.text = list[position].duration
 
 
         viewHolder.itemView.setOnClickListener {
             onItemClicked(list[position])
         }
-
-
 
 
     }

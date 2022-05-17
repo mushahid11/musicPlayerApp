@@ -57,23 +57,30 @@ class MainActivity : AppCompatActivity() {
             )
 
             //Start Service
-            intent.putExtra("path", it.path)
-            intent.putExtra("name", it.songName)
-            intent.putExtra("duration", it.duration)
-            intent.putExtra("LIST", list as Serializable?)
+            intent.apply {
+                putExtra("path", it.path)
+                putExtra("name", it.songName)
+                putExtra("duration", it.duration)
+                putExtra("LIST", list as Serializable?)
+            }
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
             } else {
                 startService(intent)
             }
 
-            Log.d("setAdapter", "setAdapter: ${it}")
+            Log.d("setAdapter", "setAdapter: $it")
             //Start Activity
             val intent2 = Intent(this, Player::class.java)
-            intent2.putExtra("path", it.path)
-            intent2.putExtra("name", it.songName)
-            intent2.putExtra("duration", it.duration)
-            intent2.putExtra("LIST", list as Serializable?)
+
+            intent2.apply {
+                putExtra("path", it.path)
+                putExtra("name", it.songName)
+                putExtra("duration", it.duration)
+                putExtra("LIST", list as Serializable?)
+            }
+
             startActivity(intent2)
 
         }

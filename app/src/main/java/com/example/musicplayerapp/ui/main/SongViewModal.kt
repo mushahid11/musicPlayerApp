@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SongViewModal @Inject constructor(val songRepository: SongRepository,application: Application) :AndroidViewModel(application) {
+class SongViewModal @Inject constructor(private val songRepository: SongRepository, application: Application) :AndroidViewModel(application) {
 
 
     var audioList = MutableLiveData<List<AllSongsModel>>()
