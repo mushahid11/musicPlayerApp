@@ -1,5 +1,7 @@
 package com.example.musicplayerapp.ui.main
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -10,10 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayerapp.ui.services.MyService
 import com.example.musicplayerapp.data.constant.AllSongsModel
+import com.example.musicplayerapp.data.constant.AppConstant
 import com.example.musicplayerapp.databinding.ActivityMainBinding
 import com.example.musicplayerapp.ui.player.Player
 import com.example.musicplayerapp.ui.SongViewModal
+import com.example.musicplayerapp.util.media
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
 import java.io.Serializable
 
 
@@ -89,4 +94,8 @@ class MainActivity : AppCompatActivity() {
         }
         binding.recyclerview.adapter = noteRVAdapter
     }
+
+
+
+
 }

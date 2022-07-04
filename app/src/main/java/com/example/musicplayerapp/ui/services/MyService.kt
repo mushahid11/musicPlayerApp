@@ -8,20 +8,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
-import com.example.musicplayerapp.data.constant.AppConstant
 import com.example.musicplayerapp.data.constant.AppConstant.CHANNEL_ID
 import com.example.musicplayerapp.data.constant.AppConstant.NEXT
 import com.example.musicplayerapp.data.constant.AppConstant.PAUSE
 import com.example.musicplayerapp.data.constant.AppConstant.PLAY
 import com.example.musicplayerapp.data.constant.AppConstant.PREVIOUS
 import com.example.musicplayerapp.data.constant.AppConstant.currentSongIndex
+import com.example.musicplayerapp.ui.player.Player
 import com.example.musicplayerapp.util.media.mediaPlayer
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -30,9 +29,9 @@ import java.io.IOException
 @AndroidEntryPoint
 class MyService : Service() {
 
-     companion object {
-         var songsList: List<AllSongsModel>? = null
-     }
+    companion object {
+        var songsList: List<AllSongsModel>? = null
+    }
 
     private var durartion: String? = null
     var path: String? = null
@@ -42,7 +41,6 @@ class MyService : Service() {
 
         return null
     }
-
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -55,6 +53,9 @@ class MyService : Service() {
         songsList = intent?.getSerializableExtra("LIST") as List<AllSongsModel>?
 
         showNotification(name)
+
+
+
 
 
 
@@ -151,58 +152,140 @@ class MyService : Service() {
     }
 
 
-
     class Receiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
 
             when (intent.action) {
-                PAUSE -> {
-                  mediaPlayer?.pause()
-                }
+                 PAUSE -> {
+                   mediaPlayer?.pause()
+
+
+                     val intent =
+                         Intent(context, Player.ReceiverMain::class.java).setAction(
+                             PAUSE
+                         )
+
+                     val nextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                         PendingIntent.getBroadcast(
+                             context,
+                             0,
+                             intent,
+                             FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+                         )
+                     } else {
+                         PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT)
+                     }
+                     context.sendBroadcast(intent)
+
+                 }
 
                 PLAY -> {
-                    if(mediaPlayer?.isPlaying == true){
+                    if (mediaPlayer?.isPlaying == true) {
                         mediaPlayer?.pause()
-                    }else{
+
+                        val intent =
+                            Intent(context, Player.ReceiverMain::class.java).setAction(
+                                PAUSE
+                            )
+
+                        val nextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            PendingIntent.getBroadcast(
+                                context,
+                                0,
+                                intent,
+                                FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+                            )
+                        } else {
+                            PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT)
+                        }
+                       context.sendBroadcast(intent)
+
+                    } else {
                         mediaPlayer?.start()
+
+                        val intent =
+                            Intent(context, Player.ReceiverMain::class.java).setAction(
+                                PLAY
+                            )
+                        val nextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            PendingIntent.getBroadcast(
+                                context,
+                                0,
+                                intent,
+                                FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+                            )
+                        } else {
+                            PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT)
+                        }
+                        context.sendBroadcast(intent)
                     }
 
                 }
 
                 PREVIOUS -> {
                     prev()
+                    val intent = Intent(context, Player.ReceiverMain::class.java).setAction(
+                        PREVIOUS
+                    )
+                    val nextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        PendingIntent.getBroadcast(
+                            context,
+                            0,
+                            intent,
+                            FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+                        )
+                    } else {
+                        PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT)
+                    }
+                    context.sendBroadcast(intent)
                 }
 
                 NEXT -> {
                     next()
+                    val intent =
+                        Intent(context, Player.ReceiverMain::class.java).setAction(NEXT)
+                    val nextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        PendingIntent.getBroadcast(
+                            context,
+                            0,
+                            intent,
+                            FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+                        )
+                    } else {
+                        PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT)
+                    }
+                    context.sendBroadcast(intent)
                 }
             }
+
+
         }
 
 
         fun next() {
 
-             if (currentSongIndex < (songsList!!.size - 1)) {
-                 playSong(currentSongIndex + 1)
-                 currentSongIndex += 1
-             } else {
-                 // play first song
-                 playSong(0)
-                 currentSongIndex = 0
-             }
+            if (currentSongIndex < (songsList!!.size - 1)) {
+                playSong(currentSongIndex + 1)
+                currentSongIndex += 1
+            } else {
+                // play first song
+                playSong(0)
+                currentSongIndex = 0
+            }
+
 
         }
 
         private fun prev() {
 
-             if (currentSongIndex > 0) {
-                 playSong(currentSongIndex - 1)
-                 currentSongIndex -= 1
-             } else {
-                 // play last song
-                 playSong(songsList!!.size - 1)
-                 currentSongIndex = songsList!!.size - 1
-             }
+            if (currentSongIndex > 0) {
+                playSong(currentSongIndex - 1)
+                currentSongIndex -= 1
+            } else {
+                // play last song
+                playSong(songsList!!.size - 1)
+                currentSongIndex = songsList!!.size - 1
+            }
 
         }
 
@@ -210,12 +293,12 @@ class MyService : Service() {
             //Play song
             try {
                 mediaPlayer?.apply {
-                   reset()
-                   setDataSource(songsList?.get(songIndex)?.path)
-                   prepare()
-                   start()
+                    reset()
+                    setDataSource(songsList?.get(songIndex)?.path)
+                    prepare()
+                    start()
                 }
-                
+
             } catch (e: IllegalArgumentException) {
                 e.printStackTrace()
             } catch (e: IllegalStateException) {
@@ -225,13 +308,8 @@ class MyService : Service() {
             }
         }
 
+
     }
-
-
-
-
-
-
 
 
     override fun onDestroy() {

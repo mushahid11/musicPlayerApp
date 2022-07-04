@@ -1,5 +1,7 @@
 package com.example.musicplayerapp.ui.player
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -8,12 +10,18 @@ import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
+import com.example.musicplayerapp.data.constant.AppConstant
+import com.example.musicplayerapp.data.constant.AppConstant.NEXT
+import com.example.musicplayerapp.data.constant.AppConstant.PAUSE
+import com.example.musicplayerapp.data.constant.AppConstant.PLAY
+import com.example.musicplayerapp.data.constant.AppConstant.PREVIOUS
 import com.example.musicplayerapp.data.constant.AppConstant.currentSongIndex
 import com.example.musicplayerapp.databinding.ActivityPlayerBinding
 import com.example.musicplayerapp.ui.main.MainActivity
 import com.example.musicplayerapp.util.getTimeInMilles
 import com.example.musicplayerapp.util.media.mediaPlayer
 import java.io.IOException
+import java.time.temporal.TemporalAdjusters.next
 
 
 class Player : AppCompatActivity() {
@@ -101,7 +109,36 @@ class Player : AppCompatActivity() {
     }
 
 
-    private fun next() {
+    inner class ReceiverMain : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+
+            when (intent.action) {
+                PAUSE -> {
+                    pauseSong()
+                }
+
+                PLAY -> {
+                    if(mediaPlayer?.isPlaying == true){
+                        pauseSong()
+                    }else{
+                        playSong(currentSongIndex)
+                    }
+
+                }
+
+                PREVIOUS -> {
+                   prev()
+                }
+
+                NEXT -> {
+                    next()
+                }
+            }
+        }
+
+    }
+
+     fun next() {
         if (currentSongIndex < (songsList!!.size - 1)) {
             playSong(currentSongIndex + 1)
             currentSongIndex += 1
@@ -112,7 +149,7 @@ class Player : AppCompatActivity() {
         }
     }
 
-    private fun prev() {
+     fun prev() {
         if (currentSongIndex > 0) {
             playSong(currentSongIndex - 1)
             currentSongIndex -= 1
@@ -148,7 +185,7 @@ class Player : AppCompatActivity() {
 
     }
 
-    private fun playSong(songIndex: Int) {
+     fun playSong(songIndex: Int) {
 
 
         binding.apply {
@@ -180,6 +217,14 @@ class Player : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun pauseSong(){
+        // Changing Button Image to pause image
+        binding.imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+        if(mediaPlayer!!.isPlaying) {
+            mediaPlayer?.pause()
+        }
     }
 
     override fun onBackPressed() {
