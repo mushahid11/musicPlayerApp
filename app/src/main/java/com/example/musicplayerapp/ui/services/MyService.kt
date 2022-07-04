@@ -1,4 +1,4 @@
-package com.example.musicplayerapp
+package com.example.musicplayerapp.ui.services
 
 
 import android.app.*
@@ -8,16 +8,20 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
+import com.example.musicplayerapp.data.constant.AppConstant
+import com.example.musicplayerapp.data.constant.AppConstant.CHANNEL_ID
 import com.example.musicplayerapp.data.constant.AppConstant.NEXT
 import com.example.musicplayerapp.data.constant.AppConstant.PAUSE
 import com.example.musicplayerapp.data.constant.AppConstant.PLAY
 import com.example.musicplayerapp.data.constant.AppConstant.PREVIOUS
+import com.example.musicplayerapp.data.constant.AppConstant.currentSongIndex
 import com.example.musicplayerapp.util.media.mediaPlayer
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -30,7 +34,7 @@ class MyService : Service() {
          var songsList: List<AllSongsModel>? = null
      }
 
-    private var Duration: String? = null
+    private var durartion: String? = null
     var path: String? = null
 
 
@@ -39,32 +43,29 @@ class MyService : Service() {
         return null
     }
 
-    override fun onStart(intent: Intent?, startid: Int) {
-        Toast.makeText(this, "Service Started and Playing Music", Toast.LENGTH_LONG).show()
-        // myPlayer.start()
-    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Toast.makeText(this, "Service Started and Playing Music", Toast.LENGTH_LONG).show()
 
         path = intent?.getStringExtra("path")
         val name = intent?.getStringExtra("name")
-        Duration = intent?.getStringExtra("duration")
+        durartion = intent?.getStringExtra("duration")
         songsList = intent?.getSerializableExtra("LIST") as List<AllSongsModel>?
 
         showNotification(name)
 
 
 
-        playMusic(path, Duration)
+        playMusic(path)
 
         return START_NOT_STICKY
     }
 
     private fun showNotification(name: String?) {
 
-        val prevIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
+        val prevIntent = Intent(baseContext, Receiver::class.java).setAction(PREVIOUS)
         val prevPendingIntentt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
                 baseContext,
@@ -89,7 +90,8 @@ class MyService : Service() {
             PendingIntent.getBroadcast(baseContext, 0, playIntent, FLAG_UPDATE_CURRENT)
         }
 
-        val nextIntent = Intent(baseContext, Receiver::class.java).setAction(PLAY)
+
+        val nextIntent = Intent(baseContext, Receiver::class.java).setAction(NEXT)
         val nextPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
                 baseContext,
@@ -101,7 +103,7 @@ class MyService : Service() {
             PendingIntent.getBroadcast(baseContext, 0, nextIntent, FLAG_UPDATE_CURRENT)
         }
 
-        val CHANNEL_ID = "my_app"
+
         val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel(
                 CHANNEL_ID,
@@ -133,7 +135,7 @@ class MyService : Service() {
     }
 
 
-    private fun playMusic(path: String?, Duration: String?) {
+    private fun playMusic(path: String?) {
 
         try {
             mediaPlayer?.apply {
@@ -151,7 +153,6 @@ class MyService : Service() {
 
 
     class Receiver : BroadcastReceiver() {
-        private var currentSongIndex = 0
         override fun onReceive(context: Context, intent: Intent) {
 
             when (intent.action) {
@@ -182,25 +183,25 @@ class MyService : Service() {
         fun next() {
 
              if (currentSongIndex < (songsList!!.size - 1)) {
-                 playSong(currentSongIndex + 1);
-                 currentSongIndex += 1;
+                 playSong(currentSongIndex + 1)
+                 currentSongIndex += 1
              } else {
                  // play first song
-                 playSong(0);
-                 currentSongIndex = 0;
+                 playSong(0)
+                 currentSongIndex = 0
              }
 
         }
 
-        fun prev() {
+        private fun prev() {
 
              if (currentSongIndex > 0) {
-                 playSong(currentSongIndex - 1);
-                 currentSongIndex -= 1;
+                 playSong(currentSongIndex - 1)
+                 currentSongIndex -= 1
              } else {
                  // play last song
-                 playSong(songsList!!.size - 1);
-                 currentSongIndex =songsList!!.size - 1;
+                 playSong(songsList!!.size - 1)
+                 currentSongIndex = songsList!!.size - 1
              }
 
         }
@@ -225,6 +226,12 @@ class MyService : Service() {
         }
 
     }
+
+
+
+
+
+
 
 
     override fun onDestroy() {

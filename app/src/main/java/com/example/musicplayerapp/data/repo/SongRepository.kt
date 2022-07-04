@@ -14,10 +14,9 @@ class SongRepository @Inject constructor() {
     fun loadAllSongs(activity: Activity) :List<AllSongsModel>{
         val list = mutableListOf<AllSongsModel>()
 
-
+        //Retrieve a list of Music files currently listed in the Media store DB via URI.
 
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
-
 
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
@@ -39,13 +38,10 @@ class SongRepository @Inject constructor() {
         val songs: MutableList<String> = ArrayList()
         while (cursor.moveToNext()) {
             songs.add(
-                cursor.apply {
-                    getString(0)
-                        .toString() + "||" + getString(1) + "||" + getString(2) + "||" +getString(
-                        3
-                    ) + "||" + getString(4) + "||" + getString(5)
-                }.toString()
-
+                cursor.getString(0)
+                    .toString() + "||" + cursor.getString(1) + "||" + cursor.getString(2) + "||" + cursor.getString(
+                    3
+                ) + "||" + cursor.getString(4) + "||" + cursor.getString(5)
             )
 
             Log.d(

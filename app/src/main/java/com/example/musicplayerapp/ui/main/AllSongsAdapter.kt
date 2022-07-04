@@ -2,13 +2,10 @@ package com.example.musicplayerapp.ui.main
 
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
+import com.example.musicplayerapp.databinding.SongsItemBinding
 
 class AllSongsAdapter(
     private val list: List<AllSongsModel>, private var onItemClicked: (song: AllSongsModel) -> Unit
@@ -16,41 +13,45 @@ class AllSongsAdapter(
     RecyclerView.Adapter<AllSongsAdapter.ViewHolder>() {
 
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imgSong: ImageView = view.findViewById(R.id.imgMusic)
-        val tvSongName: TextView = view.findViewById(R.id.tvSongName)
-        val tvDuration: TextView = view.findViewById(R.id.tvDuration)
-
-    }
-
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.songs_item, viewGroup, false)
 
-        return ViewHolder(view)
+
+        val binding = SongsItemBinding.inflate(
+            LayoutInflater.from(viewGroup.context),
+            viewGroup, false
+        )
+
+        return ViewHolder(binding)
+
     }
+
+
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        viewHolder.apply {
-            imgSong.setImageResource(list[position].image)
-            tvSongName.text = list[position].songName
-            tvDuration.text = list[position].duration
-        }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
 
+        with(holder) {
+            with(list[position]) {
 
-        viewHolder.itemView.setOnClickListener {
-            onItemClicked(list[position])
+
+                binding.imgMusic.setImageResource(this.image)
+                binding.tvSongName.text = this.songName
+                binding.tvDuration.text = this.duration
+
+
+                itemView.setOnClickListener {
+                    onItemClicked(list[position])
+                }
+            }
+
         }
 
 
     }
+
+    inner class ViewHolder(val binding: SongsItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = list.size

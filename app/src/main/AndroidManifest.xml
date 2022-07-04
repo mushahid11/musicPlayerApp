@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicPlayerApp">
         <activity
-            android:name=".ui.Player"
+            android:name=".ui.player.Player"
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"
@@ -35,9 +35,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".MyService" />
+        <service android:name=".ui.services.MyService" />
 
-        <receiver android:name=".MyService$Receiver"/>
+        <receiver android:name=".ui.services.MyService$Receiver"/>
     </application>
 
 </manifest>

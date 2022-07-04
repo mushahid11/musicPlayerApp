@@ -1,4 +1,4 @@
-package com.example.musicplayerapp.ui
+package com.example.musicplayerapp.ui.player
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.musicplayerapp.R
 import com.example.musicplayerapp.data.constant.AllSongsModel
+import com.example.musicplayerapp.data.constant.AppConstant.currentSongIndex
 import com.example.musicplayerapp.databinding.ActivityPlayerBinding
 import com.example.musicplayerapp.ui.main.MainActivity
 import com.example.musicplayerapp.util.getTimeInMilles
@@ -20,7 +21,7 @@ class Player : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
 
 
-    private var currentSongIndex = 0
+  //  private var currentSongIndex = 0
 
 
     private var songsList: List<AllSongsModel>? = null
@@ -37,14 +38,13 @@ class Player : AppCompatActivity() {
 
             val path = intent.getStringExtra("path")
             val name = intent.getStringExtra("name")
-            val Duration = intent.getStringExtra("duration")
+            val duration = intent.getStringExtra("duration")
             songsList = intent.getSerializableExtra("LIST") as List<AllSongsModel>?
 
 
 
             //Icon Change to pause when song finished
-            mediaPlayer?.setOnCompletionListener { // Do something when media player end playing
-                //  binding.imgPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            mediaPlayer?.setOnCompletionListener {
                 next()
             }
 
@@ -75,7 +75,7 @@ class Player : AppCompatActivity() {
 
 
             //    playMusic(path, Duration)
-            tvTotalDuration.text = Duration
+            tvTotalDuration.text = duration
             maxintializeSeekBar()
             seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -103,23 +103,23 @@ class Player : AppCompatActivity() {
 
     private fun next() {
         if (currentSongIndex < (songsList!!.size - 1)) {
-            playSong(currentSongIndex + 1);
-            currentSongIndex += 1;
+            playSong(currentSongIndex + 1)
+            currentSongIndex += 1
         } else {
             // play first song
-            playSong(0);
-            currentSongIndex = 0;
+            playSong(0)
+            currentSongIndex = 0
         }
     }
 
     private fun prev() {
         if (currentSongIndex > 0) {
-            playSong(currentSongIndex - 1);
-            currentSongIndex -= 1;
+            playSong(currentSongIndex - 1)
+            currentSongIndex -= 1
         } else {
             // play last song
-            playSong(songsList!!.size - 1);
-            currentSongIndex = songsList!!.size - 1;
+            playSong(songsList!!.size - 1)
+            currentSongIndex = songsList!!.size - 1
         }
     }
 
@@ -128,6 +128,8 @@ class Player : AppCompatActivity() {
         
         binding.apply {
             seekbar.max = mediaPlayer!!.duration
+
+
 
             val handler = Handler()
             handler.postDelayed(object : Runnable {

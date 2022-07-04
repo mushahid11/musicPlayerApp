@@ -5,4 +5,6 @@ object AppConstant {
     const val PLAY = "play"
     const val PREVIOUS = "previous"
     const val NEXT = "next"
+    val CHANNEL_ID = "my_app"
+     var currentSongIndex = 0
 }

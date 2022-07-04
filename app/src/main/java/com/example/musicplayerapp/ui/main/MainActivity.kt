@@ -8,10 +8,11 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicplayerapp.MyService
+import com.example.musicplayerapp.ui.services.MyService
 import com.example.musicplayerapp.data.constant.AllSongsModel
 import com.example.musicplayerapp.databinding.ActivityMainBinding
-import com.example.musicplayerapp.ui.Player
+import com.example.musicplayerapp.ui.player.Player
+import com.example.musicplayerapp.ui.SongViewModal
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var noteRVAdapter: AllSongsAdapter
     private lateinit var binding: ActivityMainBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
 
         viewModal.getAudioList(this)
+
         viewModal.audioList.observe(this) { list ->
             list?.let {
                 if (list.isNotEmpty()) {
